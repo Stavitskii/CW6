@@ -2,13 +2,20 @@ from django.contrib.auth.models import (
     BaseUserManager
 )
 
+from django.db import models
+
+
+class UserRoles(models.TextChoices):
+    ADMIN = 'admin'
+    USER = 'user'
+
 
 class UserManager(BaseUserManager):
     """
     функция создания пользователя — в нее мы передаем обязательные поля
     """
 
-    def create_user(self, email, first_name, last_name, phone, password=None):
+    def create_user(self, email, first_name, last_name, phone, role=UserRoles.USER, password=None):
         if not email:
             raise ValueError('Users must have an email address')
         user = self.model(
@@ -16,7 +23,7 @@ class UserManager(BaseUserManager):
             first_name=first_name,
             last_name=last_name,
             phone=phone,
-            role="user"
+            role=role
         )
         user.is_active = True
         user.set_password(password)
@@ -36,7 +43,7 @@ class UserManager(BaseUserManager):
             last_name=last_name,
             phone=phone,
             password=password,
-            role="admin"
+            role=UserRoles.ADMIN
         )
 
         user.save(using=self._db)
