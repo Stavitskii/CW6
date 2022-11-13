@@ -16,12 +16,12 @@ class AdSerializer(serializers.ModelSerializer):
 
 
 class AdDetailSerializer(serializers.ModelSerializer):
-    author_first_name = serializers.SerializerMethodField()
+    author_first_name = serializers.CharField(source='author.first_name', read_only=True)
     # author_last_name = ''
     # author_id = ''
 
-    def get_author_first_name(self, odj):
-        return odj.author.first_name
+    # def get_author_first_name(self, odj):
+    #     return odj.author.first_name
 
 
     class Meta:
