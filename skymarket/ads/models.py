@@ -3,10 +3,33 @@ from django.db import models
 
 
 class Ad(models.Model):
-    # TODO добавьте поля модели здесь
-    pass
+    title = models.CharField(max_length=100, verbose_name='Name of good')
+    price = models.PositiveIntegerField()
+    description = models.TextField()
+    author = models.ForeignKey('users.User', on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = 'Ad'
+        verbose_name_plural = 'Ads'
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return self.title
 
 
 class Comment(models.Model):
-    # TODO добавьте поля модели здесь
-    pass
+    text = models.TextField()
+    ad = models.ForeignKey(Ad, on_delete=models.CASCADE)
+    author = models.ForeignKey('users.User', on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = 'Comment'
+        verbose_name_plural = 'Comments'
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return self.text
+
+
