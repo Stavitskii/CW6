@@ -1,5 +1,6 @@
 from rest_framework import pagination, viewsets
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import permissions
 from rest_framework.decorators import action
 
 from .models import Ad, Comment
@@ -18,10 +19,18 @@ class AdViewSet(viewsets.ModelViewSet):
     filterset_class = AdFilter
     serializer_class = AdSerializer
 
+
     def get_queryset(self):
         if self.action == 'me':
             return Ad.objects.filter(author=self.request.user).all()
         return Ad.objects.all()
+
+    def get_permissions(self):
+        if self.action in ['list', 'retrieve', 'create', 'me']:
+            self.permission_classes = [permissions.IsAuthenticated]
+        else:
+            self.permission_classes = [permissions.IsAdminUser]
+        return super().get_permissions()
 
     @action(detail=False, methods=['get'])
     def me(self, request, *args, **kwargs):
