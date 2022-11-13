@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from .models import Ad, Comment
 
+
 # TODO Сериалайзеры. Предлагаем Вам такую структуру, однако вы вправе использовать свою
 
 class CommentSerializer(serializers.ModelSerializer):
@@ -11,9 +12,20 @@ class CommentSerializer(serializers.ModelSerializer):
 class AdSerializer(serializers.ModelSerializer):
     class Meta:
         model = Ad
-        fields ='__all__'
+        fields = '__all__'
 
 
 class AdDetailSerializer(serializers.ModelSerializer):
-    # TODO сериалайзер для модели
-    pass
+    author_first_name = serializers.SerializerMethodField()
+    # author_last_name = ''
+    # author_id = ''
+
+    def get_author_first_name(self, odj):
+        return odj.author.first_name
+
+
+    class Meta:
+        model = Ad
+        fields = '__all__'
+
+
